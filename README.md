@@ -35,7 +35,7 @@ public final class Abilash extends BackendEngineer {
 ## 📊 GitHub Analytics
 
 <div align="center">
-  <img height="180" src="https://github-readme-stats-sigma-five.vercel.app/api?username=abilash0045&show_icons=true&theme=tokyonight&hide_border=true&bg_color=1a1b27&title_color=7aa2f7&icon_color=bb9af7&text_color=c0caf5&rank_icon=github" alt="stats"/>
+  <img height="180" src="https://raw.githubusercontent.com/abilash0045/Abilash0045/output/github-stats.svg" alt="stats"/>
   <img height="180" src="https://streak-stats.demolab.com?user=abilash0045&theme=tokyonight&hide_border=true&background=1a1b27&ring=7aa2f7&fire=bb9af7&currStreakLabel=7aa2f7" alt="streak"/>
 </div>
 
