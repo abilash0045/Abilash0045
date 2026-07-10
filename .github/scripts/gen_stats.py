@@ -58,6 +58,29 @@ def fmt(d):
     return MONTHS[d.month - 1] + " " + str(d.day)
 
 
+def all_repos():
+    """With a PAT (STATS_TOKEN) this also sees private repos and org repos
+    the user can access; with the default GITHUB_TOKEN it falls back to
+    the user's public repos."""
+    if TOKEN:
+        try:
+            out = []
+            page = 1
+            while page <= 3:
+                batch = fetch(API + "/user/repos?per_page=100&affiliation=owner,collaborator,organization_member&page=" + str(page))
+                if not isinstance(batch, list) or not batch:
+                    break
+                out.extend(batch)
+                if len(batch) < 100:
+                    break
+                page += 1
+            if out:
+                return out
+        except Exception:
+            pass
+    return fetch(API + "/users/" + USER + "/repos?per_page=100&type=owner")
+
+
 def card(w, h, inner):
     return (
         '<svg xmlns="http://www.w3.org/2000/svg" width="' + str(w) + '" height="' + str(h)
@@ -83,8 +106,9 @@ def title_block(text_, x=25):
 
 # ----- data: stats -----
 user = fetch(API + "/users/" + USER)
-repos = fetch(API + "/users/" + USER + "/repos?per_page=100&type=owner")
-stars = sum(int(r.get("stargazers_count", 0)) for r in repos)
+repos = all_repos()
+owned = [r for r in repos if r.get("owner", {}).get("login", "").lower() == USER.lower()]
+stars = sum(int(r.get("stargazers_count", 0)) for r in owned)
 year = datetime.date.today().year
 commits = search_count("commits", "author:" + USER + " committer-date:>=" + str(year) + "-01-01")
 prs = search_count("issues", "author:" + USER + " type:pr")
@@ -192,12 +216,27 @@ inner += (
 streak_svg = card(420, 195, inner)
 
 # ----- data: languages -----
+# Counts the user's own repos plus org/collaborator repos they actually
+# contribute to (requires STATS_TOKEN to see private/org repos).
 lang_bytes = {}
+seen = set()
 for r in repos:
     if r.get("fork"):
         continue
+    owner_login = r.get("owner", {}).get("login", "")
+    full = r.get("full_name", owner_login + "/" + str(r.get("name", "")))
+    if full in seen:
+        continue
+    seen.add(full)
+    if owner_login.lower() != USER.lower():
+        try:
+            contribs = fetch(API + "/repos/" + full + "/contributors?per_page=100")
+            if not any(u.get("login", "").lower() == USER.lower() for u in contribs):
+                continue
+        except Exception:
+            continue
     try:
-        for k, v in fetch(API + "/repos/" + USER + "/" + r["name"] + "/languages").items():
+        for k, v in fetch(API + "/repos/" + full + "/languages").items():
             lang_bytes[k] = lang_bytes.get(k, 0) + int(v)
     except Exception:
         continue
@@ -230,6 +269,6 @@ out.mkdir(parents=True, exist_ok=True)
 (out / "github-stats.svg").write_text(stats_svg, encoding="utf-8")
 (out / "github-streak.svg").write_text(streak_svg, encoding="utf-8")
 (out / "github-langs.svg").write_text(langs_svg, encoding="utf-8")
-print("stats", stars, commits, prs, issues, followers, grade,
+print("repos", len(repos), "| stats", stars, commits, prs, issues, followers, grade,
       "| streak", cur, longest, total_year,
       "| langs", [k for k, _ in segs])
