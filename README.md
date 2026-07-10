@@ -35,12 +35,12 @@ public final class Abilash extends BackendEngineer {
 ## 📊 GitHub Analytics
 
 <div align="center">
-  <img height="180" src="https://raw.githubusercontent.com/abilash0045/Abilash0045/output/github-stats.svg" alt="stats"/>
-  <img height="180" src="https://streak-stats.demolab.com?user=abilash0045&theme=tokyonight&hide_border=true&background=1a1b27&ring=7aa2f7&fire=bb9af7&currStreakLabel=7aa2f7" alt="streak"/>
+  <img height="185" src="https://raw.githubusercontent.com/abilash0045/Abilash0045/output/github-stats.svg" alt="stats"/>
+  <img height="185" src="https://raw.githubusercontent.com/abilash0045/Abilash0045/output/github-streak.svg" alt="streak"/>
 </div>
 
 <div align="center">
-  <img height="160" src="https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=abilash0045&layout=compact&theme=tokyonight&hide_border=true&bg_color=1a1b27&title_color=7aa2f7&text_color=c0caf5&langs_count=8" alt="top languages"/>
+  <img width="100%" src="https://raw.githubusercontent.com/abilash0045/Abilash0045/output/github-langs.svg" alt="most used languages"/>
 </div>
 
 <div align="center">
